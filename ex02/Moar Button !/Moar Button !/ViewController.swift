@@ -11,16 +11,24 @@ import UIKit
 class ViewController: UIViewController {
 
     var StrNumber1 = "0"
-    var StrNumber2 = "0"
+    var StrNumber2 = ""
     var IntNumber1 = 0
     var IntNumber2 = 0
     var GloOp =  0
+    var GloOpSign = ""
     var hold = 0;
     @IBOutlet weak var label: UILabel!
     
     func PutOut(){
+        StrNumber2 = String(IntNumber2)
         StrNumber1 = String(IntNumber1)
-        label.text = StrNumber1
+        if GloOp != 0{
+            label.text = StrNumber2 + GloOpSign + StrNumber1
+            
+        }
+        else{
+            label.text = StrNumber1
+        }
     }
     func ConCatNum (caller: Int){
         hold = IntNumber1
@@ -40,17 +48,23 @@ class ViewController: UIViewController {
     
     func DoOp(){
         if GloOp == 1{
-            IntNumber1 = IntNumber1 + IntNumber2
+            IntNumber2 &+= IntNumber1
         }
         if GloOp == 2{
-            IntNumber1 = IntNumber1 - IntNumber2
+            IntNumber2 &-= IntNumber1
         }
         if GloOp == 3{
-            IntNumber1 = IntNumber1 * IntNumber2
+            IntNumber2 &*= IntNumber1
         }
         if GloOp == 4{
-            IntNumber1 = IntNumber1 / IntNumber2
+            if IntNumber1 == 0{
+                ClearScreen()
+                return
+            }
+                IntNumber2 /= IntNumber1
         }
+        IntNumber1 = IntNumber2
+        GloOp = 0
     }
     
     func AddDoOp(op: Int){
@@ -59,17 +73,22 @@ class ViewController: UIViewController {
         }
         if op == 1{
             GloOp = 1
+            GloOpSign = "+"
         }
         if op == 2{
             GloOp = 2
+            GloOpSign = "-"
         }
         if op == 3{
             GloOp = 3
+            GloOpSign = "*"
         }
         if op == 4{
             GloOp = 4
+            GloOpSign = "/"
         }
         IntNumber2 = IntNumber1
+        IntNumber1 = 0
         PutOut()
     }
     
@@ -77,9 +96,25 @@ class ViewController: UIViewController {
         IntNumber1 = 0
         StrNumber1 = "0"
         IntNumber2 = 0
-        StrNumber2 = "0"
+        StrNumber2 = ""
         GloOp = 0
+        GloOpSign = ""
         label.text = StrNumber1
+    }
+    
+    func getEqaul(){
+        DoOp()
+        StrNumber1 = String(IntNumber1)
+        IntNumber1 = 0
+        IntNumber2 = 0
+        label.text = StrNumber1
+        GloOp = 0
+        GloOpSign = ""
+    }
+    
+    func Nagete(){
+        IntNumber1 *= -1
+        PutOut()
     }
     
     @IBAction func AC(_ sender: Any) {
@@ -133,11 +168,11 @@ class ViewController: UIViewController {
         print("+")
     }
     @IBAction func invert(_ sender: Any) {
-        label.text = "NEG"
+        Nagete()
         print("NEG")
     }
     @IBAction func eqal(_ sender: Any) {
-        label.text = "="
+        getEqaul()
         print("=")
     }
     override func viewDidLoad() {
